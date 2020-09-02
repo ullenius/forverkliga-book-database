@@ -4,6 +4,7 @@ import java.util.Collection;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -25,7 +26,7 @@ public class ApiController {
 		this.service = service;
 	}
 
-	@GetMapping("/")
+	@GetMapping(path="/", produces=MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<BookWrapper> view(@RequestParam String op) {
 
 		if (op.contentEquals("select")) {
