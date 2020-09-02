@@ -1,21 +1,25 @@
 package se.anosh.forverkliga.domain;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.concurrent.atomic.AtomicLong;
 
 public class Book {
+	
+	private static AtomicLong idCounter = new AtomicLong(1);
+	private static long uniqueId() {
+		return idCounter.incrementAndGet();
+	}
 	
 	public Book() {
 	}
 	
-	public Book(long id, String title, String author) {
+	public Book(String title, String author) {
 		super();
-		this.id = id;
 		this.title = title;
 		this.author = author;
 		this.updated = LocalDateTime.now();
+		this.id = uniqueId();
 	}
-
 
 	public long getId() {
 		return id;

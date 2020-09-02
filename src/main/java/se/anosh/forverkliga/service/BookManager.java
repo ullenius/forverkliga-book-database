@@ -1,18 +1,29 @@
 package se.anosh.forverkliga.service;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+
+import org.springframework.stereotype.Service;
 
 import se.anosh.forverkliga.domain.Book;
 
+@Service
 public class BookManager implements BookService {
 
 	private Map<Long,Book> database;
 
 	public BookManager() {
 		database = new ConcurrentHashMap<>();
+		
+		Book book1 = new Book("Dracula", "Bram Stoker");
+		Book book2 = new Book("Antifragile", "Nassim Taleb");
+		Book book3 = new Book("1984", "George Orwell");
+		Book book4 = new Book("Ett Öga Rött", "Jonas Hassen Khemiri");
+		
+		database.put(book1.getId(), book1);
+		database.put(book2.getId(), book2);
+		database.put(book3.getId(), book3);
+		database.put(book4.getId(), book4);
 	}
 
 	@Override
