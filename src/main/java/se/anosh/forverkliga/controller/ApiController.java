@@ -9,6 +9,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+
 import se.anosh.forverkliga.domain.Book;
 import se.anosh.forverkliga.service.BookService;
 
@@ -44,7 +47,9 @@ public class ApiController {
 
 		Collection<Book> data;
 		String status;
+		@JsonInclude(Include.NON_NULL)
 		String message;
+		
 		public Collection<Book> getData() {
 			return data;
 		}
