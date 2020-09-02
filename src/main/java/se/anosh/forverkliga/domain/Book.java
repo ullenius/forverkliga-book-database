@@ -35,7 +35,7 @@ public class Book {
 	public void setAuthor(String author) {
 		this.author = author;
 	}
-	public LocalDateTo,e getUpdated() {
+	public LocalDateTime getUpdated() {
 		return updated;
 	}
 	public void setUpdated(LocalDateTime updated) {
