@@ -44,8 +44,21 @@ public class ApiController {
 			updated.setTitle(title);
 			return updateBook(updated);
 		}
+		else if (op.contentEquals("delete")) {
+			return removeBook(Long.parseLong(id));
+		}
 
-		return new ResponseEntity<BookWrapper>(HttpStatus.I_AM_A_TEAPOT);
+		BookWrapper error = new BookWrapper();
+		error.setStatus("error");
+		error.setMessage("FAIL");
+		return new ResponseEntity<BookWrapper>(error,HttpStatus.I_AM_A_TEAPOT);
+	}
+	
+	private ResponseEntity<BookWrapper> removeBook(long id) {
+		service.removeBook(id);
+		BookWrapper wrapper = new BookWrapper();
+		wrapper.status = "success";
+		return new ResponseEntity<BookWrapper>(wrapper,HttpStatus.OK);
 	}
 	
 	private ResponseEntity<BookWrapper> viewAllBooks() {
