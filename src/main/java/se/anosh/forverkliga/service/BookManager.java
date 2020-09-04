@@ -20,9 +20,14 @@ public class BookManager implements BookService {
 				"Something went wrong, please try again",
 				"Internet is offline",
 				"Forgot a semicolon",
-				"Forgot the window load event" 
+				"Forgot the window load event" ,
+				"Unresolved merge conflict",
+				"Server is unhappy"
 		};
-		errorMessages = Collections.unmodifiableList(Arrays.asList(messages));
+		List<String> shuffled = Arrays.asList(messages);
+		errorMessages = Collections.unmodifiableList(shuffled);
+		shuffled = null;
+		messages = null; // eligible for GC
 	}
 
 	private Map<Long,Book> database;
