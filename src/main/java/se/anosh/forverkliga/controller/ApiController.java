@@ -3,12 +3,8 @@ package se.anosh.forverkliga.controller;
 import java.util.Collection;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.*;
+import org.springframework.web.bind.annotation.*;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -47,11 +43,25 @@ public class ApiController {
 		else if (op.contentEquals("delete")) {
 			return removeBook(Long.parseLong(id));
 		}
+		else if (op.contentEquals("insert")) {
+			
+			Book book = new Book(title, author);
+			System.out.println("Adding book: " + book);
+			service.addBook(book);
+			return addBook(book.getId());
+		}
 
 		BookWrapper error = new BookWrapper();
 		error.setStatus("error");
 		error.setMessage("FAIL");
 		return new ResponseEntity<BookWrapper>(error,HttpStatus.I_AM_A_TEAPOT);
+	}
+	
+	private ResponseEntity<BookWrapper> addBook(Long id) {
+		BookWrapper wrapper = new BookWrapper();
+		wrapper.status = "success";
+		wrapper.setId(id);
+		return new ResponseEntity<BookWrapper>(wrapper,HttpStatus.OK);
 	}
 	
 	private ResponseEntity<BookWrapper> removeBook(long id) {
@@ -77,7 +87,6 @@ public class ApiController {
 
 		return new ResponseEntity<BookWrapper>(wrapper,HttpStatus.OK);
 	}
-	
 
 	private static class BookWrapper {
 
@@ -88,6 +97,8 @@ public class ApiController {
 		String status;
 		@JsonInclude(Include.NON_NULL)
 		String message;
+		@JsonInclude(Include.NON_NULL)
+		Long id;
 		
 		public Collection<Book> getData() {
 			return data;
@@ -107,7 +118,14 @@ public class ApiController {
 		public void setMessage(String message) {
 			this.message = message;
 		}
-
+		public void setId(Long id) {
+			System.out.println("wrapper... settting id: " + id);
+			this.id = id;
+		}
+		
+		public Long getId() {
+			return id;
+		}
 	}
 
 }
