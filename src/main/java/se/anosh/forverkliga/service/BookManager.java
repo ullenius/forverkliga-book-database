@@ -39,7 +39,10 @@ public class BookManager implements BookService {
 
 	@Override
 	public void updateBook(long id, Book updated) {
+		
+		System.out.println("Bookservice... updating id:" + id);
 		database.put(id, updated);
+		System.out.println("Database after updating... " + database);
 	}
 
 	@Override

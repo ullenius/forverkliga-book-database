@@ -27,25 +27,50 @@ public class ApiController {
 	}
 
 	@GetMapping(path="/", produces=MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<BookWrapper> view(@RequestParam String op) {
+	public ResponseEntity<BookWrapper> view(
+			@RequestParam String op,
+			@RequestParam(required=false) String id,
+			@RequestParam(required=false) String author,
+			@RequestParam(required=false) String title) {
 
 		if (op.contentEquals("select")) {
-
-			BookWrapper wrapper = new BookWrapper();
-			wrapper.data = service.findAllBooks();
-			wrapper.status = "success";
-
-			return new ResponseEntity<BookWrapper>(wrapper,HttpStatus.OK);
+		return viewAllBooks();
+		} else if (op.contentEquals("update")) {
+			
+			System.out.println("running update...");
+			Book updated = new Book();
+			updated.setId(Long.parseLong(id));
+			updated.setAuthor(author);
+			updated.setTitle(title);
+			return updateBook(updated);
 		}
 
 		return new ResponseEntity<BookWrapper>(HttpStatus.I_AM_A_TEAPOT);
 	}
+	
+	private ResponseEntity<BookWrapper> viewAllBooks() {
+		BookWrapper wrapper = new BookWrapper();
+		wrapper.data = service.findAllBooks();
+		wrapper.status = "success";
+
+		return new ResponseEntity<BookWrapper>(wrapper,HttpStatus.OK);
+	}
+	
+	private ResponseEntity<BookWrapper> updateBook(Book updated) {
+		System.out.println("updateBook received: " + updated);
+		service.updateBook(updated.getId(), updated);
+		BookWrapper wrapper = new BookWrapper();
+		wrapper.status = "success";
+
+		return new ResponseEntity<BookWrapper>(wrapper,HttpStatus.OK);
+	}
+	
 
 	private static class BookWrapper {
 
 		public BookWrapper() {
 		}
-
+		@JsonInclude(Include.NON_NULL)
 		Collection<Book> data;
 		String status;
 		@JsonInclude(Include.NON_NULL)

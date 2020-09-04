@@ -11,6 +11,7 @@ public class Book {
 	}
 	
 	public Book() {
+		this.updated = LocalDateTime.now();
 	}
 	
 	public Book(String title, String author) {
@@ -45,8 +46,19 @@ public class Book {
 	public void setUpdated(LocalDateTime updated) {
 		this.updated = updated;
 	}
+	
 	private long id;
 	private String title;
 	private String author;
 	private LocalDateTime updated;
+	
+	@Override
+	public String toString() {
+		return "Book [id=" + id + ", title=" + title + ", author=" + author + ", updated=" + updated + ", getId()="
+				+ getId() + ", getTitle()=" + getTitle() + ", getAuthor()=" + getAuthor() + ", getUpdated()="
+				+ getUpdated() + ", getClass()=" + getClass() + ", hashCode()=" + hashCode() + ", toString()="
+				+ super.toString() + "]";
+	}
+	
+	
 }
