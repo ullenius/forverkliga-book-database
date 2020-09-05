@@ -1,13 +1,9 @@
 package se.anosh.forverkliga.controller;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
+import java.util.concurrent.ThreadLocalRandom;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.slf4j.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
@@ -58,6 +54,10 @@ public class ApiController {
 			@RequestParam(required=false) String title) {
 		
 		
+		final int rng = ThreadLocalRandom.current().nextInt(0,10);
+		if (rng <= 6) {
+			return randomFail();
+		}
 
 		if (op.contentEquals("select")) {
 			return viewAllBooks();
@@ -78,7 +78,6 @@ public class ApiController {
 			service.addBook(book);
 			return addBook(book.getId());
 		}
-
 		else {
 			return HttpFail();
 		}
