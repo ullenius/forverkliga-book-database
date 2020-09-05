@@ -5,11 +5,11 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.springframework.stereotype.Service;
 
+import se.anosh.forverkliga.domain.ApiKey;
 import se.anosh.forverkliga.domain.Book;
 
 @Service
 public class BookManager implements BookService {
-
 
 	private Map<String,Map<Long,Book>> keyMappings;
 
@@ -19,12 +19,14 @@ public class BookManager implements BookService {
 
 	@Override
 	public void createDatabase(String key) {
-		if (key == null || key.length() != 5)
+		if (key == null || key.length() != ApiKey.length())
 			throw new IllegalArgumentException("Illegal key length");
 
-		keyMappings.putIfAbsent(key, new ConcurrentHashMap<Long,Book>());
+		Object exists = keyMappings.putIfAbsent(key, new ConcurrentHashMap<Long,Book>());
 		System.out.println("Creating database for key... " + key);
-		addMockData(keyMappings.get(key)); // TODO: remove in production
+		if (exists == null) {
+			addMockData(keyMappings.get(key)); // TODO: remove in production
+		}
 	}
 
 	@Override

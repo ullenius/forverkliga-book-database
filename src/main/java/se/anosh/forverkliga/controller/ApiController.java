@@ -60,14 +60,20 @@ public class ApiController {
 //			return randomFail();
 //		}
 		
-		if (requestKey == null && key == null) {
+		if (requestKey != null) {
+			final String newKey = generateKey();
+			service.createDatabase(newKey);
+			return keyResponse(newKey);
+		}
+		
+		if (key == null) {
 			BookWrapper wrapper = new BookWrapper();
 			wrapper.setStatus("error");
 			wrapper.setMessage("You must specify an API key.");
 			return HttpOK(wrapper);
 		}
 		
-		if (key != null) {
+		else if (key != null) {
 			boolean validKey = service.validApiKey(key);
 			if (!validKey) {
 				BookWrapper wrapper = new BookWrapper();
@@ -79,12 +85,6 @@ public class ApiController {
 		
 		if (op == null) {
 			return HttpFail();
-		}
-
-		if (requestKey != null) {
-			final String newKey = generateKey();
-			service.createDatabase(newKey);
-			return keyResponse(newKey);
 		}
 		
 		if (op.contentEquals("select")) {
