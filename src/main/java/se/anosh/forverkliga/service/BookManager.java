@@ -10,10 +10,58 @@ import se.anosh.forverkliga.domain.Book;
 @Service
 public class BookManager implements BookService {
 
-	private Map<Long,Book> database;
+
+	private Map<String,Map<Long,Book>> keyMappings;
 
 	public BookManager() {
-		database = new ConcurrentHashMap<>();
+		keyMappings = new ConcurrentHashMap<>();
+	}
+
+	@Override
+	public void createDatabase(String key) {
+		if (key == null || key.length() != 5)
+			throw new IllegalArgumentException("Illegal key length");
+
+		keyMappings.putIfAbsent(key, new ConcurrentHashMap<Long,Book>());
+		System.out.println("Creating database for key... " + key);
+		addMockData(keyMappings.get(key)); // TODO: remove in production
+	}
+
+	@Override
+	public void addBook(String apiKey, Book book) {
+		Map<Long,Book> database = getDatabase(apiKey);
+		database.put(book.getId(), book);
+	}
+
+	@Override
+	public Collection<Book> findAllBooks(String apiKey) {
+		Map<Long,Book> database = getDatabase(apiKey);
+		return Collections.unmodifiableCollection(database.values());
+	}
+
+	@Override
+	public void updateBook(String apiKey, long id, Book updated) {
+		Map<Long,Book> database = getDatabase(apiKey);
+		System.out.println("Bookservice... updating id:" + id);
+		database.replace(id, updated);
+		System.out.println("Database after updating... " + database);
+	}
+
+	@Override
+	public void removeBook(String apiKey, long id) {
+		Map<Long,Book> database = getDatabase(apiKey);
+		database.remove(id);
+	}
+	
+	private Map<Long,Book> getDatabase(String key) {
+		Map<Long,Book> database = keyMappings.get(key);
+		if (database == null) {
+			database = Collections.emptyMap();
+		}
+		return database;
+	}
+
+	private void addMockData(Map<Long,Book> database) {
 
 		Book book1 = new Book("Dracula", "Bram Stoker");
 		Book book2 = new Book("Antifragile", "Nassim Taleb");
@@ -25,30 +73,5 @@ public class BookManager implements BookService {
 		database.put(book3.getId(), book3);
 		database.put(book4.getId(), book4);
 	}
-
-	@Override
-	public void addBook(Book book) {
-		database.put(book.getId(), book);
-	}
-
-	@Override
-	public Collection<Book> findAllBooks() {
-
-		return Collections.unmodifiableCollection(database.values());
-	}
-
-	@Override
-	public void updateBook(long id, Book updated) {
-
-		System.out.println("Bookservice... updating id:" + id);
-		database.replace(id, updated);
-		System.out.println("Database after updating... " + database);
-	}
-
-	@Override
-	public void removeBook(long id) {
-		database.remove(id);
-	}
-
 
 }

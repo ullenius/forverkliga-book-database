@@ -48,39 +48,66 @@ public class ApiController {
 
 	@GetMapping(path="/", produces=MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<BookWrapper> view(
-			@RequestParam String op,
+			@RequestParam(required=false) String op,
 			@RequestParam(required=false) String id,
 			@RequestParam(required=false) String author,
-			@RequestParam(required=false) String title) {
+			@RequestParam(required=false) String title,
+			@RequestParam(required=false) final String key,
+			@RequestParam(required=false) String requestKey) {
 		
+//		final int rng = ThreadLocalRandom.current().nextInt(0,10);
+//		if (rng <= 6) {
+//			return randomFail();
+//		}
 		
-		final int rng = ThreadLocalRandom.current().nextInt(0,10);
-		if (rng <= 6) {
-			return randomFail();
+		if (requestKey == null && key == null) {
+			BookWrapper wrapper = new BookWrapper();
+			wrapper.setStatus("error");
+			wrapper.setMessage("You must specify an API key.");
+			return HttpOK(wrapper);
+		}
+		
+		if (op == null) {
+			return HttpFail();
 		}
 
+		if (requestKey != null) {
+			final String newKey = generateKey();
+			service.createDatabase(newKey);
+			return keyResponse(newKey);
+		}
+		
 		if (op.contentEquals("select")) {
-			return viewAllBooks();
+			return viewAllBooks(key);
 		} 
 		else if (op.contentEquals("update")) {
 			
 			logger.debug("Running update");
 			Book updated = new Book(Long.parseLong(id), author, title);
-			return updateBook(updated);
+			return updateBook(key, updated);
 		}
 		else if (op.contentEquals("delete")) {
-			return removeBook(Long.parseLong(id));
+			return removeBook(key, Long.parseLong(id));
 		}
 		else if (op.contentEquals("insert")) {
 			
 			Book book = new Book(title, author);
 			logger.info("Adding book: {}", book);
-			service.addBook(book);
+			service.addBook(key, book);
 			return addBook(book.getId());
 		}
 		else {
 			return HttpFail();
 		}
+	}
+	
+	private String generateKey() {
+		return "abcde";
+	}
+	
+	private ResponseEntity<BookWrapper> keyResponse(String key) {
+		BookWrapper wrapper = new BookWrapper(key);
+		return HttpOK(wrapper);
 	}
 	
 	private ResponseEntity<BookWrapper> randomFail() {
@@ -101,19 +128,19 @@ public class ApiController {
 		return HttpOK(wrapper);
 	}
 	
-	private ResponseEntity<BookWrapper> removeBook(long id) {
-		service.removeBook(id);
+	private ResponseEntity<BookWrapper> removeBook(String key, long id) {
+		service.removeBook(key, id);
 		BookWrapper wrapper = new BookWrapper();
 		return HttpOK(wrapper);
 	}
 	
-	private ResponseEntity<BookWrapper> viewAllBooks() {
-		BookWrapper wrapper = new BookWrapper(service.findAllBooks());
+	private ResponseEntity<BookWrapper> viewAllBooks(String key) {
+		BookWrapper wrapper = new BookWrapper(service.findAllBooks(key));
 		return HttpOK(wrapper);
 	}
 	
-	private ResponseEntity<BookWrapper> updateBook(Book updated) {
-		service.updateBook(updated.getId(), updated);
+	private ResponseEntity<BookWrapper> updateBook(String key, Book updated) {
+		service.updateBook(key, updated.getId(), updated);
 		BookWrapper wrapper = new BookWrapper();
 		return HttpOK(wrapper);
 	}
@@ -139,16 +166,23 @@ public class ApiController {
 			status = "success";
 		}
 		
+		public BookWrapper(String key) {
+			this.key = key;
+			status = "success";
+		}
+		
 		public BookWrapper(Collection<Book> data) {
 			this.data = data;
 			status = "success";
 		}
 		
-		@JsonInclude(Include.NON_NULL)
+		@JsonInclude(Include.NON_EMPTY)
 		private Collection<Book> data;
 		private String status;
 		@JsonInclude(Include.NON_NULL)
 		private String message;
+		@JsonInclude(Include.NON_NULL)
+		private String key;
 		@JsonInclude(Include.NON_NULL)
 		private Long id;
 		
@@ -166,6 +200,10 @@ public class ApiController {
 		}
 		public void setMessage(String message) {
 			this.message = message;
+		}
+		
+		public String getKey() {
+			return key;
 		}
 		
 		public Long getId() {
