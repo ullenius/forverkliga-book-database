@@ -1,6 +1,6 @@
 # :books: Book Database API Backend
 
-A reverse-engineered Java :coffee: version of the Förverkliga Mock Book Database API in Java. The original was written by Fredrik Andersson using PHP.
+A reverse-engineered Java :coffee: version of the Förverkliga Mock Book Database API. The original was written by Fredrik Andersson using PHP.
 
 This is an intentionally poorly designed API that simulates a Book Database. Its purpose is for client-side developers to practice working with a badly designed API that is flaky (all operations are set to fail at random. The success rate for any given operation is 20%).
 
@@ -10,13 +10,11 @@ This is an intentionally poorly designed API that simulates a Book Database. Its
 
 This is a Maven project.
 
-~~~sh
-./mwvn install target
-java -jar target/forverkliga.jar
-~~~
+To build the project run:
 
-## :nerd_face: Differences from PHP-version
-API returns `application/JSON` instead of the erroneous `text/HTML` (sic).
+~~~sh
+./mvnw install target
+~~~
 
 ## :pencil2: Usage Summary
 
@@ -50,7 +48,7 @@ In order to use the database you need an API key. Request a key by an `GET` requ
 
 Example: localhost:8080/?requestKey
 
-## Add data
+## :blue_book: Add data
 
 Add book information to the database. Query string parameters:
 
@@ -67,7 +65,7 @@ This request will output a `JSON` object of the following form if successful:
 }
 ~~~
 
-## View data
+## :eyeglasses: View data
 
 Get all book information in database. Query string parameters:
 
@@ -86,7 +84,7 @@ This request will output a JSON object of the following form if successful:
 	}]
 }
 ~~~
-## Modify data
+## :pencil: Modify data
 
 Change the entry for a specific book. Query string parameters:
 
@@ -102,7 +100,7 @@ This request will output a JSON object of the following form if successful:
 	"status": "success"
 }
 ~~~
-## Delete data
+## :skull: Delete data
 
 Delete the information for a specific book in the database. Query string parameters:
 
@@ -116,7 +114,7 @@ This request will output a `JSON` object of the following form if successful:
 	"status": "success"
 }
 ~~~
-## Errors
+## :poop: Errors
 
 Every operation may fail! If an error occurs, the request will output a `JSON` object that describes the error:
 ~~~
