@@ -3,6 +3,7 @@ package se.anosh.forverkliga.service;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.slf4j.*;
 import org.springframework.stereotype.Service;
 
 import se.anosh.forverkliga.apikey.ApiKey;
@@ -12,9 +13,11 @@ import se.anosh.forverkliga.domain.Book;
 public class BookManager implements BookService {
 
 	private Map<String,Map<Long,Book>> keyMappings;
+	private Logger logger;
 
 	public BookManager() {
 		keyMappings = new ConcurrentHashMap<>();
+		logger = LoggerFactory.getLogger("BookManager.class");
 	}
 
 	@Override
@@ -23,7 +26,7 @@ public class BookManager implements BookService {
 			throw new IllegalArgumentException("Illegal key length");
 
 		Object exists = keyMappings.putIfAbsent(key, new ConcurrentHashMap<Long,Book>());
-		System.out.println("Creating database for key... " + key);
+		logger.info("Creating database for key: {}", key);
 		if (exists == null) {
 			addMockData(keyMappings.get(key)); // TODO: remove in production
 		}
@@ -44,9 +47,9 @@ public class BookManager implements BookService {
 	@Override
 	public void updateBook(String apiKey, long id, Book updated) {
 		Map<Long,Book> database = getDatabase(apiKey);
-		System.out.println("Bookservice... updating id:" + id);
+		logger.info("Bookservice... updating id: {}", id);
 		database.replace(id, updated);
-		System.out.println("Database after updating... " + database);
+		logger.info("Database after updating: {}", database);
 	}
 
 	@Override

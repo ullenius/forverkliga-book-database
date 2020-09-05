@@ -39,7 +39,7 @@ public class ApiController {
 		messages = null;
 	}
 	
-	private BookService service;
+	private final BookService service;
 	private final Logger logger;
 
 	@Autowired
