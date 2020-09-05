@@ -1,0 +1,127 @@
+#:books: Book Database API Backend
+
+A reverse-engineered Java :coffee: version of the Förverkliga Mock Book Database API in Java. The original was written by Fredrik Andersson using PHP.
+
+This is an intentionally poorly designed API that simulates a Book Database. Its purpose is for client-side developers to practice working with a badly designed API that is flaky (all operations are set to fail at random. The success rate for any given operation is 20%).
+
+**This is the server code** For the client-web app go here.
+
+##:construction_worker: Installation
+
+This is a Maven project.
+
+~~~sh
+./mwvn install target
+java -jar target/forverkliga.jar
+~~~
+
+##:nerd_face: Differences from PHP-version
+API returns `application/JSON` instead of the erroneous `text/HTML` (sic).
+
+##:pencil2: Usage Summary
+
+- Client requests an API-key :key:
+- Client can now add, view, update and delete entries in their book database.
+- Database entries are stored in memory for **X** minutes. Inactive databases are automatically removed.
+- This is **not** intended for use as a real production system.
+
+
+## API Summary
+1. The API has a high likelihood of failing. On every operation.
+2. The API returns `HTTP 200` on every operation
+3. The API returns a `JSON` but the MIME-type is erroneously set to `text/html`.
+4. The API accepts only query-parameters.
+5. Only `GET` is used.
+
+## :information_source: Technical API Documentation
+
+Text by Fredrik Andersson.
+
+This API simulates a book database. There are 4 operations available:
+
+1. Add data to database
+2. View data in database
+3. Modify data in database
+4. Delete data
+
+## API key
+
+In order to use the database you need an API key. Request a key by an `GET` request with requestKey in the query string. You must use that key in all subsequent requests.
+
+Example: localhost:8080/?requestKey
+
+##Add data
+
+Add book information to the database. Query string parameters:
+
+    op=insert
+    key - an API key that identifies the request
+    title - the book title
+    author - the name of the author
+
+This request will output a `JSON` object of the following form if successful:
+~~~json
+{
+	"status": "success",
+	"id": an id generated for the inserted data
+}
+~~~
+
+##View data
+
+Get all book information in database. Query string parameters:
+
+    op=select
+    key - an API key that identifies the request
+
+This request will output a JSON object of the following form if successful:
+~~~json
+{
+	"status": "success",
+	"data": [{
+		"id": a unique id that identifies a book,
+		"title": book title,
+		"author": author name,
+		"updated": when the data was last updated
+	}]
+}
+~~~
+##Modify data
+
+Change the entry for a specific book. Query string parameters:
+
+    op=update
+    key - an API key that identifies the request
+    id - identifies what book you want to update
+    title - new title
+    author - new author
+
+This request will output a JSON object of the following form if successful:
+~~~json
+{
+	"status": "success"
+}
+~~~
+##Delete data
+
+Delete the information for a specific book in the database. Query string parameters:
+
+    op=delete
+    key - an API key that identifies the request
+    id - identifies what book you want to remove
+
+This request will output a `JSON` object of the following form if successful:
+~~~json
+{
+	"status": "success"
+}
+~~~
+##Errors
+
+Every operation may fail! If an error occurs, the request will output a `JSON` object that describes the error:
+~~~json
+{
+	"status": "error",
+	"message": a descriptive message
+}
+~~~
