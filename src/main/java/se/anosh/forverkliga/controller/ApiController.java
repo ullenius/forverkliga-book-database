@@ -1,6 +1,10 @@
 package se.anosh.forverkliga.controller;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,6 +21,26 @@ import se.anosh.forverkliga.service.BookService;
 @RestController
 public class ApiController {
 
+	private static final List<String> errorMessages;
+	
+	static {
+		String[] messages = { 
+				"Mispelled a variable",
+				"Disrupted by solar flares",
+				"Storing passwords in plaintext and hashing using MD5",
+				"Flux capacitors overloaded",
+				"Warp core ejected",
+				"Something went wrong, please try again",
+				"Internet is offline",
+				"Forgot a semicolon",
+				"Forgot the window load event" ,
+				"Unresolved merge conflict",
+				"Server is unhappy"
+		};
+		errorMessages = Collections.unmodifiableList(Arrays.asList(messages));
+		messages = null;
+	}
+	
 	private BookService service;
 	private final Logger logger;
 
@@ -32,16 +56,16 @@ public class ApiController {
 			@RequestParam(required=false) String id,
 			@RequestParam(required=false) String author,
 			@RequestParam(required=false) String title) {
+		
+		
 
 		if (op.contentEquals("select")) {
-		return viewAllBooks();
-		} else if (op.contentEquals("update")) {
+			return viewAllBooks();
+		} 
+		else if (op.contentEquals("update")) {
 			
 			logger.debug("Running update");
-			Book updated = new Book();
-			updated.setId(Long.parseLong(id));
-			updated.setAuthor(author);
-			updated.setTitle(title);
+			Book updated = new Book(Long.parseLong(id), author, title);
 			return updateBook(updated);
 		}
 		else if (op.contentEquals("delete")) {
@@ -55,12 +79,26 @@ public class ApiController {
 			return addBook(book.getId());
 		}
 
-		return HttpFail();
+		else {
+			return HttpFail();
+		}
+	}
+	
+	private ResponseEntity<BookWrapper> randomFail() {
+		BookWrapper wrapper = new BookWrapper();
+		wrapper.setStatus("error");
+		wrapper.setMessage(randomErrorMessage());
+		return HttpOK(wrapper);
+	}
+	
+	private String randomErrorMessage() {
+		List<String> randomized = new ArrayList<>(errorMessages);
+		Collections.shuffle(randomized);
+		return randomized.get(0);
 	}
 	
 	private ResponseEntity<BookWrapper> addBook(Long id) {
-		BookWrapper wrapper = new BookWrapper();
-		wrapper.setId(id);
+		BookWrapper wrapper = new BookWrapper(id);
 		return HttpOK(wrapper);
 	}
 	
@@ -72,14 +110,12 @@ public class ApiController {
 	
 	private ResponseEntity<BookWrapper> viewAllBooks() {
 		BookWrapper wrapper = new BookWrapper(service.findAllBooks());
-
 		return HttpOK(wrapper);
 	}
 	
 	private ResponseEntity<BookWrapper> updateBook(Book updated) {
 		service.updateBook(updated.getId(), updated);
 		BookWrapper wrapper = new BookWrapper();
-
 		return HttpOK(wrapper);
 	}
 	
@@ -93,10 +129,13 @@ public class ApiController {
 		error.setMessage("FAIL");
 		return new ResponseEntity<BookWrapper>(error,HttpStatus.I_AM_A_TEAPOT);
 	}
-	
 
 	private static class BookWrapper {
 
+		public BookWrapper(Long id) {
+			this.id = id;
+		}
+		
 		public BookWrapper() {
 			status = "success";
 		}
@@ -128,9 +167,6 @@ public class ApiController {
 		}
 		public void setMessage(String message) {
 			this.message = message;
-		}
-		public void setId(Long id) {
-			this.id = id;
 		}
 		
 		public Long getId() {

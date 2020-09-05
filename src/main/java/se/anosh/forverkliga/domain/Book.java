@@ -12,14 +12,21 @@ public class Book {
 	
 	public Book() {
 		this.updated = LocalDateTime.now();
+		this.id = uniqueId();
 	}
 	
 	public Book(String title, String author) {
-		super();
 		this.title = title;
 		this.author = author;
 		this.updated = LocalDateTime.now();
 		this.id = uniqueId();
+	}
+	
+	public Book(Long id, String title, String author) {
+		this.title = title;
+		this.author = author;
+		this.updated = LocalDateTime.now();
+		this.id = id;
 	}
 
 	public long getId() {

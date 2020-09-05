@@ -10,28 +10,7 @@ import se.anosh.forverkliga.domain.Book;
 @Service
 public class BookManager implements BookService {
 
-	static {
-		String[] messages = { 
-				"Mispelled a variable",
-				"Disrupted by solar flares",
-				"Storing passwords in plaintext and hashing using MD5",
-				"Flux capacitors overloaded",
-				"Warp core ejected",
-				"Something went wrong, please try again",
-				"Internet is offline",
-				"Forgot a semicolon",
-				"Forgot the window load event" ,
-				"Unresolved merge conflict",
-				"Server is unhappy"
-		};
-		List<String> shuffled = Arrays.asList(messages);
-		errorMessages = Collections.unmodifiableList(shuffled);
-		shuffled = null;
-		messages = null; // eligible for GC
-	}
-
 	private Map<Long,Book> database;
-	private static final List<String> errorMessages;
 
 	public BookManager() {
 		database = new ConcurrentHashMap<>();
