@@ -1,10 +1,15 @@
 # :books: Book Database API Backend
 
-A reverse-engineered Java :coffee: version of the Förverkliga Mock Book Database API. The original was written by Fredrik Andersson using PHP.
+A reverse-engineered Java :coffee: version of the Book Database API.
+The [original](https://www.forverkliga.se/JavaScript/api/crud.php) was written 
+by David Andersson using PHP.
 
-This is an intentionally poorly designed API that simulates a Book Database. Its purpose is for client-side developers to practice working with a badly designed API that is flaky (all operations are set to fail at random. The success rate for any given operation is 20%).
+This is an intentionally poorly designed API that simulates a Book Database. 
+Its purpose is for client-side developers to practice working with a flaky and
+badly designed API.
 
-**This is the server code** For the client-web app go here.
+**This is the server code** For the client-web app 
+see [book-api-js](https://github.com/ullenius/book-api-js).
 
 ## :construction_worker: Installation
 
@@ -16,24 +21,17 @@ To build the project run:
 ./mvnw install target
 ~~~
 
-## :pencil2: Usage Summary
-
-- Client requests an API-key :key:
-- Client can now add, view, update and delete entries in their book database.
-- Database entries are stored in memory for **X** minutes. Inactive databases are automatically removed.
-- This is **not** intended for use as a real production system.
-
-
 ## :pushpin: API Summary
 1. The API has a high likelihood of failing. On every operation.
 2. The API returns `HTTP 200` on every operation
 3. The API returns a `JSON` but the MIME-type is erroneously set to `text/html`.
+
 4. The API accepts only query-parameters.
 5. Only `GET` is used.
 
 ## :information_source: Technical API Documentation
 
-Text by Fredrik Andersson.
+Text by David Andersson.
 
 This API simulates a book database. There are 4 operations available:
 
@@ -44,9 +42,11 @@ This API simulates a book database. There are 4 operations available:
 
 ## :key: API key
 
-In order to use the database you need an API key. Request a key by an `GET` request with requestKey in the query string. You must use that key in all subsequent requests.
+In order to use the database you need an API key. Request a key by an `GET` 
+request with `requestKey` in the query string. You must use that key in all 
+subsequent requests.
 
-Example: localhost:8080/?requestKey
+Example: `localhost:8080/?requestKey`
 
 ## :blue_book: Add data
 
@@ -72,7 +72,7 @@ Get all book information in database. Query string parameters:
     op=select
     key - an API key that identifies the request
 
-This request will output a JSON object of the following form if successful:
+This request will output a `JSON` object of the following form if successful:
 ~~~
 {
 	"status": "success",
@@ -94,7 +94,7 @@ Change the entry for a specific book. Query string parameters:
     title - new title
     author - new author
 
-This request will output a JSON object of the following form if successful:
+This request will output a `JSON` object of the following form if successful:
 ~~~json
 {
 	"status": "success"
@@ -102,7 +102,8 @@ This request will output a JSON object of the following form if successful:
 ~~~
 ## :skull: Delete data
 
-Delete the information for a specific book in the database. Query string parameters:
+Delete the information for a specific book in the database. Query string 
+parameters:
 
     op=delete
     key - an API key that identifies the request
@@ -116,7 +117,8 @@ This request will output a `JSON` object of the following form if successful:
 ~~~
 ## :poop: Errors
 
-Every operation may fail! If an error occurs, the request will output a `JSON` object that describes the error:
+Every operation may fail! If an error occurs, the request will output a `JSON` 
+object that describes the error:
 ~~~
 {
 	"status": "error",
