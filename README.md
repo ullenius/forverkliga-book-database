@@ -1,4 +1,4 @@
-#:books: Book Database API Backend
+# :books: Book Database API Backend
 
 A reverse-engineered Java :coffee: version of the Förverkliga Mock Book Database API in Java. The original was written by Fredrik Andersson using PHP.
 
@@ -6,7 +6,7 @@ This is an intentionally poorly designed API that simulates a Book Database. Its
 
 **This is the server code** For the client-web app go here.
 
-##:construction_worker: Installation
+## :construction_worker: Installation
 
 This is a Maven project.
 
@@ -15,10 +15,10 @@ This is a Maven project.
 java -jar target/forverkliga.jar
 ~~~
 
-##:nerd_face: Differences from PHP-version
+## :nerd_face: Differences from PHP-version
 API returns `application/JSON` instead of the erroneous `text/HTML` (sic).
 
-##:pencil2: Usage Summary
+## :pencil2: Usage Summary
 
 - Client requests an API-key :key:
 - Client can now add, view, update and delete entries in their book database.
@@ -26,7 +26,7 @@ API returns `application/JSON` instead of the erroneous `text/HTML` (sic).
 - This is **not** intended for use as a real production system.
 
 
-## API Summary
+## :pushpin: API Summary
 1. The API has a high likelihood of failing. On every operation.
 2. The API returns `HTTP 200` on every operation
 3. The API returns a `JSON` but the MIME-type is erroneously set to `text/html`.
@@ -44,13 +44,13 @@ This API simulates a book database. There are 4 operations available:
 3. Modify data in database
 4. Delete data
 
-## API key
+## :key: API key
 
 In order to use the database you need an API key. Request a key by an `GET` request with requestKey in the query string. You must use that key in all subsequent requests.
 
 Example: localhost:8080/?requestKey
 
-##Add data
+## Add data
 
 Add book information to the database. Query string parameters:
 
@@ -60,14 +60,14 @@ Add book information to the database. Query string parameters:
     author - the name of the author
 
 This request will output a `JSON` object of the following form if successful:
-~~~json
+~~~
 {
 	"status": "success",
 	"id": an id generated for the inserted data
 }
 ~~~
 
-##View data
+## View data
 
 Get all book information in database. Query string parameters:
 
@@ -75,7 +75,7 @@ Get all book information in database. Query string parameters:
     key - an API key that identifies the request
 
 This request will output a JSON object of the following form if successful:
-~~~json
+~~~
 {
 	"status": "success",
 	"data": [{
@@ -86,7 +86,7 @@ This request will output a JSON object of the following form if successful:
 	}]
 }
 ~~~
-##Modify data
+## Modify data
 
 Change the entry for a specific book. Query string parameters:
 
@@ -102,7 +102,7 @@ This request will output a JSON object of the following form if successful:
 	"status": "success"
 }
 ~~~
-##Delete data
+## Delete data
 
 Delete the information for a specific book in the database. Query string parameters:
 
@@ -116,10 +116,10 @@ This request will output a `JSON` object of the following form if successful:
 	"status": "success"
 }
 ~~~
-##Errors
+## Errors
 
 Every operation may fail! If an error occurs, the request will output a `JSON` object that describes the error:
-~~~json
+~~~
 {
 	"status": "error",
 	"message": a descriptive message
