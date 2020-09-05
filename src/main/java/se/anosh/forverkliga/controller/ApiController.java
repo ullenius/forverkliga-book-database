@@ -67,6 +67,16 @@ public class ApiController {
 			return HttpOK(wrapper);
 		}
 		
+		if (key != null) {
+			boolean validKey = service.validApiKey(key);
+			if (!validKey) {
+				BookWrapper wrapper = new BookWrapper();
+				wrapper.setStatus("error");
+				wrapper.setMessage("Bad API key, use \"requestKey\" to request a new one.");
+				return HttpOK(wrapper);
+			}
+		}
+		
 		if (op == null) {
 			return HttpFail();
 		}
@@ -101,7 +111,7 @@ public class ApiController {
 		}
 	}
 	
-	private String generateKey() {
+	private String generateKey() { // TODO implement this
 		return "abcde";
 	}
 	
@@ -176,7 +186,7 @@ public class ApiController {
 			status = "success";
 		}
 		
-		@JsonInclude(Include.NON_EMPTY)
+		@JsonInclude(Include.NON_NULL)
 		private Collection<Book> data;
 		private String status;
 		@JsonInclude(Include.NON_NULL)

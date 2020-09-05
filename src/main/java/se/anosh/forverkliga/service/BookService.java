@@ -6,6 +6,7 @@ import se.anosh.forverkliga.domain.Book;
 
 public interface BookService {
 	
+	boolean validApiKey(String key);
 	void addBook(String apiKey, Book book);
 	Collection<Book> findAllBooks(String apiKey);
 	void updateBook(String apiKey, long id, Book updated);

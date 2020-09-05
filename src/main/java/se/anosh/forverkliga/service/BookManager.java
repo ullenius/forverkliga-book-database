@@ -55,9 +55,6 @@ public class BookManager implements BookService {
 	
 	private Map<Long,Book> getDatabase(String key) {
 		Map<Long,Book> database = keyMappings.get(key);
-		if (database == null) {
-			database = Collections.emptyMap();
-		}
 		return database;
 	}
 
@@ -72,6 +69,11 @@ public class BookManager implements BookService {
 		database.put(book2.getId(), book2);
 		database.put(book3.getId(), book3);
 		database.put(book4.getId(), book4);
+	}
+
+	@Override
+	public boolean validApiKey(String key) {
+		return (keyMappings.containsKey(key));
 	}
 
 }
