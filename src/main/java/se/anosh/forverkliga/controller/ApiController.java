@@ -57,12 +57,7 @@ public class ApiController {
 			@RequestParam(required=false) final String key,
 			@RequestParam(required=false) String requestKey) {
 		
-		final int rng = ThreadLocalRandom.current().nextInt(0,10);
-		if (rng <= 7) {
-			return randomFail();
-		}
-		
-		if (requestKey != null) {
+		if (requestKey != null) { // TODO: rng fail here as well... but less often, 10% ?
 			final String newKey = generateKey();
 			service.createDatabase(newKey);
 			return keyResponse(newKey);
@@ -73,6 +68,11 @@ public class ApiController {
 			wrapper.setStatus("error");
 			wrapper.setMessage("You must specify an API key.");
 			return HttpOK(wrapper);
+		}
+		
+		final int rng = ThreadLocalRandom.current().nextInt(0,10);
+		if (rng <= 7) {
+			return randomFail();
 		}
 		
 		else if (key != null) {
