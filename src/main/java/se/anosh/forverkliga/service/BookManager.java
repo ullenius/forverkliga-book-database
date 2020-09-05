@@ -5,7 +5,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.springframework.stereotype.Service;
 
-import se.anosh.forverkliga.domain.ApiKey;
+import se.anosh.forverkliga.apikey.ApiKey;
 import se.anosh.forverkliga.domain.Book;
 
 @Service

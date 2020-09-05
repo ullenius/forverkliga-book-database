@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
+import se.anosh.forverkliga.apikey.ApiKeyGenerator;
 import se.anosh.forverkliga.domain.Book;
 import se.anosh.forverkliga.service.BookService;
 
@@ -31,7 +32,8 @@ public class ApiController {
 				"Forgot a semicolon",
 				"Forgot the window load event" ,
 				"Unresolved merge conflict",
-				"Server is unhappy"
+				"Server is unhappy",
+				"Bad attitude"
 		};
 		errorMessages = Collections.unmodifiableList(Arrays.asList(messages));
 		messages = null;
@@ -55,10 +57,10 @@ public class ApiController {
 			@RequestParam(required=false) final String key,
 			@RequestParam(required=false) String requestKey) {
 		
-//		final int rng = ThreadLocalRandom.current().nextInt(0,10);
-//		if (rng <= 6) {
-//			return randomFail();
-//		}
+		final int rng = ThreadLocalRandom.current().nextInt(0,10);
+		if (rng <= 7) {
+			return randomFail();
+		}
 		
 		if (requestKey != null) {
 			final String newKey = generateKey();
@@ -111,8 +113,8 @@ public class ApiController {
 		}
 	}
 	
-	private String generateKey() { // TODO implement this
-		return "abcde";
+	private String generateKey() {
+		return ApiKeyGenerator.generateKey();
 	}
 	
 	private ResponseEntity<BookWrapper> keyResponse(String key) {

@@ -1,4 +1,4 @@
-package se.anosh.forverkliga.domain;
+package se.anosh.forverkliga.apikey;
 
 public final class ApiKey {
 	
