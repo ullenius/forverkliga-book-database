@@ -8,6 +8,8 @@ This is an intentionally poorly designed API that simulates a Book Database.
 Its purpose is for client-side developers to practice working with a flaky and
 badly designed API.
 
+Databases automatically expire after 30 minutes of non-use.
+
 **This is the server code** For the client-web app 
 see [book-api-js](https://github.com/ullenius/book-api-js).
 
