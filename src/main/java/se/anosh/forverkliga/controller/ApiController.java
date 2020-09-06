@@ -70,10 +70,10 @@ public class ApiController {
 			return HttpOK(wrapper);
 		}
 		
-//		final int rng = ThreadLocalRandom.current().nextInt(0,10);
-//		if (rng <= 7) {
-//			return randomFail();
-//		}
+		final int rng = ThreadLocalRandom.current().nextInt(0,10);
+		if (rng <= 7) {
+			return randomFail();
+		}
 		
 		else if (key != null) {
 			boolean validKey = service.validApiKey(key);

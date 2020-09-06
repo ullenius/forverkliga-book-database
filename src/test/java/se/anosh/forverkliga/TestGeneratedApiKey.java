@@ -25,7 +25,8 @@ class TestGeneratedApiKey {
 	@Test
 	void testUniqueKeys() {
 		
-		String one, two;
+		String one;
+		String two;
 		one = ApiKeyGenerator.generateKey();
 		two = ApiKeyGenerator.generateKey();
 		

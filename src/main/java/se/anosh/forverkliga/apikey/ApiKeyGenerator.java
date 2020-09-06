@@ -5,6 +5,10 @@ import java.util.Base64;
 
 public final class ApiKeyGenerator {
 	
+	private ApiKeyGenerator() {
+		throw new AssertionError("Cannot be instantiated");
+	}
+	
 	public static String generateKey() {
 		SecureRandom rnd = new SecureRandom();
 		byte[] token = new byte[4];
