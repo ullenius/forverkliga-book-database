@@ -2,10 +2,13 @@ package se.anosh.forverkliga.dao;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
 
 import org.slf4j.*;
 import org.springframework.stereotype.Repository;
 
+import net.jodah.expiringmap.ExpirationPolicy;
+import net.jodah.expiringmap.ExpiringMap;
 import se.anosh.forverkliga.apikey.ApiKey;
 import se.anosh.forverkliga.domain.Book;
 
@@ -24,11 +27,21 @@ public class BookDatabase implements BookDao {
 		if (key == null || key.length() != ApiKey.length())
 			throw new IllegalArgumentException("Illegal key length");
 
-		Object exists = keyMappings.putIfAbsent(key, new ConcurrentHashMap<Long,Book>());
-		logger.info("Creating database for key: {}", key);
-		if (exists == null) {
-			addMockData(keyMappings.get(key)); // TODO: remove in production
+		if (!keyMappings.containsKey(key)) {
+			logger.info("Creating database for key: {}", key);
+			Map<Long,Book> map = ExpiringMap.builder()
+					.maxSize(123)
+					.expirationPolicy(ExpirationPolicy.ACCESSED)
+					.expiration(1, TimeUnit.MINUTES)
+					.build();
+			
+			Object exists = keyMappings.putIfAbsent(key, map);
+			
+//			if (exists == null) {
+//				addMockData(keyMappings.get(key)); // TODO: remove in production
+//			}
 		}
+		
 	}
 
 	@Override

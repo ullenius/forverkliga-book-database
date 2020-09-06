@@ -108,9 +108,7 @@ public class ApiController {
 			service.addBook(key, book);
 			return addBook(book.getId());
 		}
-		else {
-			return HttpFail();
-		}
+		return HttpFail();
 	}
 	
 	private String generateKey() {
@@ -172,6 +170,7 @@ public class ApiController {
 
 		public BookWrapper(Long id) {
 			this.id = id;
+			status = "success";
 		}
 		
 		public BookWrapper() {
