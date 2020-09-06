@@ -1,14 +1,12 @@
 package se.anosh.forverkliga.dao;
 
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 import org.slf4j.*;
 import org.springframework.stereotype.Repository;
 
-import net.jodah.expiringmap.ExpirationPolicy;
-import net.jodah.expiringmap.ExpiringMap;
+import net.jodah.expiringmap.*;
 import se.anosh.forverkliga.apikey.ApiKey;
 import se.anosh.forverkliga.domain.Book;
 
@@ -32,16 +30,11 @@ public class BookDatabase implements BookDao {
 			Map<Long,Book> map = ExpiringMap.builder()
 					.maxSize(123)
 					.expirationPolicy(ExpirationPolicy.ACCESSED)
-					.expiration(1, TimeUnit.MINUTES)
+					.expiration(30, TimeUnit.MINUTES)
 					.build();
 			
-			Object exists = keyMappings.putIfAbsent(key, map);
-			
-//			if (exists == null) {
-//				addMockData(keyMappings.get(key)); // TODO: remove in production
-//			}
+			keyMappings.putIfAbsent(key, map);
 		}
-		
 	}
 
 	@Override
@@ -73,19 +66,6 @@ public class BookDatabase implements BookDao {
 	private Map<Long,Book> getDatabase(String key) {
 		Map<Long,Book> database = keyMappings.get(key);
 		return database;
-	}
-
-	private void addMockData(Map<Long,Book> database) {
-
-		Book book1 = new Book("Dracula", "Bram Stoker");
-		Book book2 = new Book("Antifragile", "Nassim Taleb");
-		Book book3 = new Book("1984", "George Orwell");
-		Book book4 = new Book("Ett Öga Rött", "Jonas Hassen Khemiri");
-
-		database.put(book1.getId(), book1);
-		database.put(book2.getId(), book2);
-		database.put(book3.getId(), book3);
-		database.put(book4.getId(), book4);
 	}
 
 	@Override
