@@ -1,6 +1,7 @@
 package se.anosh.forverkliga.domain;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicLong;
 
 public class Book {
@@ -38,35 +39,39 @@ public class Book {
 	public long getId() {
 		return id;
 	}
-	public void setId(long id) {
-		this.id = id;
-	}
+
 	public String getTitle() {
 		return title;
 	}
-	public void setTitle(String title) {
-		this.title = title;
-	}
+
 	public String getAuthor() {
 		return author;
 	}
-	public void setAuthor(String author) {
-		this.author = author;
-	}
+
 	public LocalDateTime getUpdated() {
 		return updated;
 	}
-	public void setUpdated(LocalDateTime updated) {
-		this.updated = updated;
-	}
-	
+
 	@Override
 	public String toString() {
-		return "Book [id=" + id + ", title=" + title + ", author=" + author + ", updated=" + updated + ", getId()="
-				+ getId() + ", getTitle()=" + getTitle() + ", getAuthor()=" + getAuthor() + ", getUpdated()="
-				+ getUpdated() + ", getClass()=" + getClass() + ", hashCode()=" + hashCode() + ", toString()="
-				+ super.toString() + "]";
+		return "Book [id=" + id + ", title=" + title + ", author=" + author + ", updated=" + updated + "]";
 	}
-	
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(id);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Book other = (Book) obj;
+		return id == other.id;
+	}
 	
 }
