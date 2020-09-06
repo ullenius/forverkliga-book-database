@@ -6,9 +6,15 @@ import java.util.concurrent.atomic.AtomicLong;
 public class Book {
 	
 	private static AtomicLong idCounter = new AtomicLong(1);
+	
 	private static long uniqueId() {
 		return idCounter.incrementAndGet();
 	}
+	
+	private long id;
+	private String title;
+	private String author;
+	private LocalDateTime updated;
 	
 	public Book() {
 		this.updated = LocalDateTime.now();
@@ -53,11 +59,6 @@ public class Book {
 	public void setUpdated(LocalDateTime updated) {
 		this.updated = updated;
 	}
-	
-	private long id;
-	private String title;
-	private String author;
-	private LocalDateTime updated;
 	
 	@Override
 	public String toString() {
