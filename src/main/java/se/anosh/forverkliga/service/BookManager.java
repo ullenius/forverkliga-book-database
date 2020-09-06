@@ -1,84 +1,51 @@
 package se.anosh.forverkliga.service;
 
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 
-import org.slf4j.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import se.anosh.forverkliga.apikey.ApiKey;
+import se.anosh.forverkliga.dao.BookDao;
 import se.anosh.forverkliga.domain.Book;
 
 @Service
 public class BookManager implements BookService {
 
-	private Map<String,Map<Long,Book>> keyMappings;
-	private Logger logger;
+	private BookDao dao;
 
-	public BookManager() {
-		keyMappings = new ConcurrentHashMap<>();
-		logger = LoggerFactory.getLogger("BookManager.class");
+	@Autowired
+	public BookManager(BookDao dao) {
+		this.dao = dao;
 	}
 
 	@Override
 	public void createDatabase(String key) {
-		if (key == null || key.length() != ApiKey.length())
-			throw new IllegalArgumentException("Illegal key length");
-
-		Object exists = keyMappings.putIfAbsent(key, new ConcurrentHashMap<Long,Book>());
-		logger.info("Creating database for key: {}", key);
-		if (exists == null) {
-			addMockData(keyMappings.get(key)); // TODO: remove in production
-		}
+		dao.createDatabase(key);
 	}
 
 	@Override
 	public void addBook(String apiKey, Book book) {
-		Map<Long,Book> database = getDatabase(apiKey);
-		database.put(book.getId(), book);
+		dao.add(apiKey, book);
 	}
 
 	@Override
 	public Collection<Book> findAllBooks(String apiKey) {
-		Map<Long,Book> database = getDatabase(apiKey);
-		return Collections.unmodifiableCollection(database.values());
+		return dao.findAll(apiKey);
 	}
 
 	@Override
 	public void updateBook(String apiKey, long id, Book updated) {
-		Map<Long,Book> database = getDatabase(apiKey);
-		logger.info("Bookservice... updating id: {}", id);
-		database.replace(id, updated);
-		logger.info("Database after updating: {}", database);
+		dao.update(apiKey, id, updated);
 	}
 
 	@Override
 	public void removeBook(String apiKey, long id) {
-		Map<Long,Book> database = getDatabase(apiKey);
-		database.remove(id);
-	}
-	
-	private Map<Long,Book> getDatabase(String key) {
-		Map<Long,Book> database = keyMappings.get(key);
-		return database;
-	}
-
-	private void addMockData(Map<Long,Book> database) {
-
-		Book book1 = new Book("Dracula", "Bram Stoker");
-		Book book2 = new Book("Antifragile", "Nassim Taleb");
-		Book book3 = new Book("1984", "George Orwell");
-		Book book4 = new Book("Ett Öga Rött", "Jonas Hassen Khemiri");
-
-		database.put(book1.getId(), book1);
-		database.put(book2.getId(), book2);
-		database.put(book3.getId(), book3);
-		database.put(book4.getId(), book4);
+		dao.remove(apiKey, id);
 	}
 
 	@Override
 	public boolean validApiKey(String key) {
-		return (keyMappings.containsKey(key));
+		return dao.validKey(key);
 	}
 
 }
