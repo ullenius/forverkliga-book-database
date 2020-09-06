@@ -13,7 +13,7 @@ class TestGeneratedApiKey {
 		
 		String key = ApiKeyGenerator.generateKey();
 		assertNotNull(key);
-		assertEquals(key.length(),ApiKey.length());
+		assertEquals(ApiKey.length(), key.length());
 	}
 	
 	@Test
