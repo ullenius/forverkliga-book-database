@@ -18,16 +18,14 @@ This is a Maven project.
 To build the project run:
 
 ~~~sh
-./mvnw install target
+./mvnw install
 ~~~
 
 ## :pushpin: API Summary
 1. The API has a high likelihood of failing. On every operation.
 2. The API returns `HTTP 200` on every operation
-3. The API returns a `JSON` but the MIME-type is erroneously set to `text/html`.
-
-4. The API accepts only query-parameters.
-5. Only `GET` is used.
+3. The API accepts only query-parameters.
+4. Only `GET` is used.
 
 ## :information_source: Technical API Documentation
 

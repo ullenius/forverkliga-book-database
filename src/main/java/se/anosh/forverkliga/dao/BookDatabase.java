@@ -1,12 +1,9 @@
 package se.anosh.forverkliga.dao;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.slf4j.*;
 import org.springframework.stereotype.Repository;
 
 import se.anosh.forverkliga.apikey.ApiKey;

@@ -2,17 +2,11 @@ package se.anosh.forverkliga;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import se.anosh.forverkliga.apikey.ApiKey;
-import se.anosh.forverkliga.apikey.ApiKeyGenerator;
+import se.anosh.forverkliga.apikey.*;
 
 class TestGeneratedApiKey {
-
-	@BeforeEach
-	void setUp() throws Exception {
-	}
 
 	@Test
 	void testKeyLength() {
