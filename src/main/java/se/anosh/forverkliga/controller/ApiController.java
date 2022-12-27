@@ -1,5 +1,6 @@
 package se.anosh.forverkliga.controller;
 
+import java.io.File;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -21,6 +22,8 @@ public class ApiController {
 	private static final int ERROR_RATE = 3;
 
 	private static final List<String> errorMessages;
+
+	private static final Logger log = LoggerFactory.getLogger("ApiController.class");
 	
 	static {
 		String[] messages = { 
@@ -48,6 +51,15 @@ public class ApiController {
 	public ApiController(BookService service) {
 		this.service = service;
 		logger = LoggerFactory.getLogger("ApiController.class");
+
+		if (isDockerized()) {
+			log.info("Running inside Docker container");
+		}
+	}
+
+	private boolean isDockerized() {
+		File f = new File("/.dockerenv");
+		return f.exists();
 	}
 
 	@GetMapping(path="/", produces=MediaType.APPLICATION_JSON_VALUE)
