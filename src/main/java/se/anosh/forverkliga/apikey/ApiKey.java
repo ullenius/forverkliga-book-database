@@ -4,7 +4,7 @@ public final class ApiKey {
 	
 	private static final int KEY_LENGTH = 6;
 	
-	public static final int length() {
+	public static int length() {
 		return KEY_LENGTH;
 	}
 

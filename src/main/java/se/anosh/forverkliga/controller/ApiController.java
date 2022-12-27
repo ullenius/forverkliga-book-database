@@ -18,6 +18,8 @@ import se.anosh.forverkliga.service.BookService;
 @RestController
 public class ApiController {
 
+	private static final int ERROR_RATE = 3;
+
 	private static final List<String> errorMessages;
 	
 	static {
@@ -71,7 +73,7 @@ public class ApiController {
 		}
 		
 		final int rng = ThreadLocalRandom.current().nextInt(0,10);
-		if (rng <= 7) {
+		if (rng <= ERROR_RATE) {
 			return randomFail();
 		}
 		
@@ -102,7 +104,6 @@ public class ApiController {
 			return removeBook(key, Long.parseLong(id));
 		}
 		else if (op.contentEquals("insert")) {
-			
 			Book book = new Book(title, author);
 			logger.info("Adding book: {}", book);
 			service.addBook(key, book);
