@@ -24,8 +24,11 @@ public class ApiController {
 	private static final List<String> errorMessages;
 
 	private static final Logger log = LoggerFactory.getLogger("ApiController.class");
+
+	private static final boolean isDockerised;
 	
 	static {
+		isDockerised = isDockerised();
 		String[] messages = { 
 				"Mispelled a variable",
 				"Disrupted by solar flares",
@@ -43,7 +46,7 @@ public class ApiController {
 		errorMessages = Collections.unmodifiableList(Arrays.asList(messages));
 		messages = null;
 	}
-	
+
 	private final BookService service;
 	private final Logger logger;
 
@@ -52,12 +55,12 @@ public class ApiController {
 		this.service = service;
 		logger = LoggerFactory.getLogger("ApiController.class");
 
-		if (isDockerized()) {
+		if (isDockerised) {
 			log.info("Running inside Docker container");
 		}
 	}
 
-	private boolean isDockerized() {
+	private static boolean isDockerised() {
 		File f = new File("/.dockerenv");
 		return f.exists();
 	}
@@ -169,17 +172,17 @@ public class ApiController {
 	}
 	
 	private ResponseEntity<BookWrapper> HttpOK(BookWrapper wrapper) {
-		return new ResponseEntity<BookWrapper>(wrapper,HttpStatus.OK);
+		return new ResponseEntity<>(wrapper, HttpStatus.OK);
 	}
 	
 	private ResponseEntity<BookWrapper> HttpFail() {
 		BookWrapper error = new BookWrapper();
 		error.setStatus("error");
 		error.setMessage("FAIL");
-		return new ResponseEntity<BookWrapper>(error,HttpStatus.I_AM_A_TEAPOT);
+		return new ResponseEntity<>(error, HttpStatus.I_AM_A_TEAPOT);
 	}
 
-	private static class BookWrapper {
+	private static final class BookWrapper {
 
 		public BookWrapper(Long id) {
 			this.id = id;
